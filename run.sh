@@ -1,23 +1,25 @@
 #!/bin/bash -l 
 
-
+SCRIPT_DIR=$(pwd)
 BUILD_DIR=/glade/scratch/hkershaw/nightly_builds
 MODEL=lorenz_96
 MAILTO="hkershaw+${MODEL}@ucar.edu"
 cd $BUILD_DIR
 
 checkout () {
+i
 git clone https://github.com/NCAR/DART.git $MODEL
 }
 
 compile () { 
-cp mkmf.template DART/build_templates && \
+cp ${SCRIPT_DIR}/mkmf.template $MODEL/build_templates && \
 cd $MODEL/models/$MODEL/work && \
 ./quikbuild.csh
 }
 
 submit () {
-qsub batch.sh
+cp "${SCRIPT_DIR}/batch_${MODEL}.sh" . && \
+qsub batch_"$MODEL".sh
 }
 
 mail_fail() {
@@ -41,7 +43,4 @@ compile
 submit $?
 [[ $? -ne 0 ]] ; mail_fail submit
 
-# Submit batch job
-#cd /glade/u/home/hkershaw/test_cron
-#qsub batch.sh  
 
