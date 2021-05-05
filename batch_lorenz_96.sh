@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -A P86850054
-#PBS -N cron-test
+#PBS -N lorenz_96.log
 #PBS -j oe
 #PBS -k eod
 #PBS -q regular
@@ -11,4 +11,5 @@
 export TMPDIR=/glade/scratch/$USER/temp
 mkdir -p $TMPDIR
 
+echo $PBS_JOBID
 mpiexec_mpt ./filter
