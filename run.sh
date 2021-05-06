@@ -25,16 +25,32 @@ qsub batch_"$MODEL".sh
 
 mail_fail() {
 
-now=$(date +"%m_%d_%Y")
-cp "${BUILD_DIR}/${MODEL}/models/${MODEL}/lorenz_96.log*" log.txt
 cat <<EOF> mail.txt
 
 $MODEL test failed in $1
-$(date)"
+$(date)
+
+EOF
+
+mail -s "${1} failed" $MAILTO < mail.txt
+}
+
+mail_fail_log() {
+
+now=$(date +"%m_%d_%Y")
+cp "${BUILD_DIR}/${MODEL}/models/${MODEL}/work/${MODEL}.log*" log.txt
+cat <<EOF> mail.txt
+
+$MODEL not bitwise $1
+$(date)
 
 EOF
 
 mail -s "${1} failed" $MAILTO -A log.txt < mail.txt
+}
+
+enter_time() {
+echo "Hello doing nothing at the mo"
 }
 
 checkout
@@ -46,4 +62,14 @@ compile
 submit $?
 [[ $? -ne 0 ]] && mail_fail submit && exit 3
 
+# wait until job has created a log file
+until [ -f ${BUILD_DIR}/${MODEL}/models/${MODEL}/work/done ]
+do 
+ sleep 5m
+done
 
+# email log file if job failes
+mail_fail_log
+
+# Enter timing into database
+enter_time

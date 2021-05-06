@@ -12,4 +12,8 @@ export TMPDIR=/glade/scratch/$USER/temp
 mkdir -p $TMPDIR
 
 echo $PBS_JOBID
-mpiexec_mpt ./filter
+time mpiexec_mpt ./filter
+
+touch done
+
+
