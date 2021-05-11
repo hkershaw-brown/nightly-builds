@@ -1,1 +1,1 @@
-*/5 * * * * /glade/u/home/hkershaw/test_cron/run.sh 2>&1 | /glade/u/home/hkershaw/timestamp.sh &>> /glade/u/home/hkershaw/test_cron/out
+53 3 * * * /glade/u/home/hkershaw/test_cron/run.sh 2>&1 | /glade/u/home/hkershaw/timestamp.sh &>> /glade/u/home/hkershaw/test_cron/out
