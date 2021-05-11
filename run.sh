@@ -6,6 +6,7 @@ MODEL=lorenz_96
 MAILTO="hkershaw+${MODEL}@ucar.edu"
 REFERENCE="/glade/work/hkershaw/DART_bitwise/DART_v9.10.3/models/lorenz_96/work"
 TIMING_FILE=${SCRIPT_DIR}/"timing.csv"
+LOG_FILE=""
 
 cd $BUILD_DIR
 [[ -d $MODEL ]] && rm -rf $MODEL
@@ -37,26 +38,33 @@ EOF
 mail -s "${1} failed" $MAILTO < mail.txt
 }
 
+log_result() {
+
+find  ${BUILD_DIR}/${MODEL}/models/${MODEL}/work/ -name lorenz_96.log* -exec cp {} ${SCRIPT_DIR}/log.txt \;
+cd ${SCRIPT_DIR}
+head -n 1 log.txt | cut -d . -f 1 | tr -d '\n' >> $TIMING_FILE
+tail log.txt | grep -A3 real | awk '{ printf " , %s ", $2 } END { print " " }' >> $TIMING_FILE
+}
+
 mail_fail_log() {
 
 find  ${BUILD_DIR}/${MODEL}/models/${MODEL}/work/ -name lorenz_96.log* -exec cp {} ${SCRIPT_DIR}/log.txt \;
 cp ${BUILD_DIR}/${MODEL}/models/${MODEL}/work/${LOG_FILE} ${SCRIPT_DIR}/
 
+
 cd ${SCRIPT_DIR}
 cat <<EOF> mail.txt
 
-$MODEL not bitwise $1
+$MODEL not bitwise
 $(date)
 
 EOF
 
-mail -s "${1} failed" -a $LOG_FILE -a log.txt $MAILTO < mail.txt
 
-}
+head $LOG_FILE >> mail.txt
 
-log_result() {
-head -n 1 log.txt | cut -d . -f 1 | tr -d '\n' >> $TIMING_FILE
-tail log.txt | grep -A3  | awk '{ printf "%s ,", $2 } END { print " " }' >> $TIMING_FILE
+mail -s "${1} failed" -a log.txt $MAILTO < mail.txt
+
 }
 
 check_bitwise() {
@@ -100,7 +108,9 @@ done
 
 # bitwise check
 check_bitwise
-[[ $? -ne 0 ]] && mail_fail_log bitwise
+[[ $? -ne 0 ]] && mail_fail_log
 
 # log the results
 log_result
+
+
