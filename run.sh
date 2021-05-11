@@ -5,6 +5,7 @@ BUILD_DIR=/glade/scratch/hkershaw/nightly_builds
 MODEL=lorenz_96
 MAILTO="hkershaw+${MODEL}@ucar.edu"
 REFERENCE="/glade/work/hkershaw/DART_bitwise/DART_v9.10.3/models/lorenz_96/work"
+TIMING_FILE=${SCRIPT_DIR}/"timing.csv"
 
 cd $BUILD_DIR
 [[ -d $MODEL ]] && rm -rf $MODEL
@@ -40,25 +41,29 @@ mail_fail_log() {
 
 find  ${BUILD_DIR}/${MODEL}/models/${MODEL}/work/ -name lorenz_96.log* -exec cp {} ${SCRIPT_DIR}/log.txt \;
 cp ${BUILD_DIR}/${MODEL}/models/${MODEL}/work/${LOG_FILE} ${SCRIPT_DIR}/
+
+cd ${SCRIPT_DIR}
 cat <<EOF> mail.txt
 
 $MODEL not bitwise $1
 $(date)
 
-EOF 
+EOF
 
 mail -s "${1} failed" -a $LOG_FILE -a log.txt $MAILTO < mail.txt
+
 }
 
 log_result() {
-echo "Hello doing nothing at the mo"
+head -n 1 log.txt | cut -d . -f 1 | tr -d '\n' >> $TIMING_FILE
+tail log.txt | grep -A3  | awk '{ printf "%s ,", $2 } END { print " " }' >> $TIMING_FILE
 }
 
 check_bitwise() {
 
 now=$(date +"%m-%d-%YT%H:%M:%S")
 LOG_FILE="bitwise_log_${now}.txt"
-netcdf=("forecast.nc" "preassim.nc" "postassim.nc" "analysis.nc" "filter_output.nc")
+netcdf=("preassim.nc" "analysis.nc" "filter_output.nc")
 status=0
 
 echo "bitwise netcdf" > $LOG_FILE
