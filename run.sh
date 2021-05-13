@@ -1,5 +1,7 @@
 #!/bin/bash -l 
 
+cd /glade/u/home/hkershaw/test_cron
+
 SCRIPT_DIR=$(pwd)
 BUILD_DIR=/glade/scratch/hkershaw/nightly_builds
 MODEL=lorenz_96
