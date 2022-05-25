@@ -1,0 +1,5 @@
+bitwise netcdf
+preassim.nc  ::  DIFFER : LENGTHS OF RECORDS : time (1000) <> time (206)
+analysis.nc  ::  DIFFER : LENGTHS OF RECORDS : time (1000) <> time (205)
+filter_output.nc  ::  2022-04-14 03:57:06.210917 -0600 ERROR nccmp_state.c:163 File not found: /glade/scratch/hkershaw/nightly_builds/lorenz_96/models/lorenz_96/work/filter_output.nc
+bitwise obs_seq.final

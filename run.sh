@@ -20,7 +20,7 @@ git clone https://github.com/NCAR/DART.git $MODEL
 compile () { 
 cp ${SCRIPT_DIR}/mkmf.template $MODEL/build_templates && \
 cd $MODEL/models/$MODEL/work && \
-./quickbuild.csh -mpi
+./quickbuild.sh 
 }
 
 submit () {
@@ -110,9 +110,12 @@ done
 
 # bitwise check
 check_bitwise
-[[ $? -ne 0 ]] && mail_fail_log
-
+if [[ $? -ne 0 ]]
+then 
+  mail_fail_log
+else
 # log the results
-log_result
+  log_result
+fi
 
 
