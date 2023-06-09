@@ -6,7 +6,7 @@ SCRIPT_DIR=$(pwd)
 BUILD_DIR=/glade/scratch/hkershaw/nightly_builds
 MODEL=lorenz_96
 MAILTO="hkershaw+${MODEL}@ucar.edu"
-REFERENCE="/glade/work/hkershaw/DART_bitwise/DART_v9.10.3/models/lorenz_96/work"
+REFERENCE="/glade/work/hkershaw/DART_bitwise/DART_v10.7.3/models/lorenz_96/work"
 TIMING_FILE=${SCRIPT_DIR}/"timing.csv"
 LOG_FILE=""
 
